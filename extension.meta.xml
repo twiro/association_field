@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension id="association_field" status="development" xmlns="http://getsymphony.com/schemas/extension/1.0">
+	<name>Association Field</name>
+	<description>Linking entries between two sections</description>
+	<repo type="github">https://github.com/symphonists/association_field</repo>
+	<types>
+		<type>Field Types</type>
+	</types>
+	<authors>
+		<author>
+			<name github="symphonycms" symphony="team">Symphony Team</name>
+			<website>http://getsymphony.com</website>
+		</author>
+	</authors>
+	<releases>
+		<release version="0.1.0" date="2014-06-05" min="2.4">
+			- Initial release (forked Select Box Link)
+		</release>
+	</releases>
+</extension>
