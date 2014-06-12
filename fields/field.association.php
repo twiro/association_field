@@ -102,6 +102,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
         if (is_array($sections) && !empty($sections)) {
             foreach ($sections as $_section) {
+                $results = array();
 
                 $section = SectionManager::fetch($_section['id']);
                 $group = array(
@@ -110,12 +111,12 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
                     'values' => array()
                 );
 
-                EntryManager::setFetchSorting($section->getSortingField(), $section->getSortingOrder());
-                $entries = EntryManager::fetch(NULL, $section->get('id'), $limit, 0, null, null, false, false);
-
-                $results = array();
-                foreach ($entries as $entry) {
-                    $results[] = (int) $entry['id'];
+                if ($limit > 0) {
+                    EntryManager::setFetchSorting($section->getSortingField(), $section->getSortingOrder());
+                    $entries = EntryManager::fetch(NULL, $section->get('id'), $limit, 0, null, null, false, false);
+                    foreach ($entries as $entry) {
+                        $results[] = (int) $entry['id'];
+                    }
                 }
 
                 // If a value is already selected, ensure it is added to the list (if it isn't in the available options)
@@ -328,10 +329,10 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
                     }
 
                     $relation_data[] = array(
-                        'id' =>				$entry->get('id'),
-                        'section_handle' =>	$section_info[$section_id]['handle'],
-                        'section_name' =>	$section_info[$section_id]['name'],
-                        'value' =>			$value
+                        'id' =>             $entry->get('id'),
+                        'section_handle' => $section_info[$section_id]['handle'],
+                        'section_name' =>   $section_info[$section_id]['name'],
+                        'value' =>          $value
                     );
                 }
             }
@@ -562,6 +563,9 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         if (!is_null($flagWithError)) {
             $wrapper->appendChild(Widget::Error($label, $flagWithError));
         } else $wrapper->appendChild($label);
+
+        // Set entry limit
+        $wrapper->setAttribute('data-limit', $this->get('limit'));
     }
 
     public function processRawFieldData($data, &$status, &$message=null, $simulate=false, $entry_id=null)
@@ -660,8 +664,8 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
     public function getImportModes()
     {
         return array(
-            'getValue' =>		ImportableField::STRING_VALUE,
-            'getPostdata' =>	ImportableField::ARRAY_VALUE
+            'getValue' =>       ImportableField::STRING_VALUE,
+            'getPostdata' =>    ImportableField::ARRAY_VALUE
         );
     }
 
@@ -707,16 +711,16 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
     public function getExportModes()
     {
         return array(
-            'getPostdata' =>		ExportableField::POSTDATA,
-            'listEntry' =>			ExportableField::LIST_OF
+            'getPostdata' =>        ExportableField::POSTDATA,
+            'listEntry' =>          ExportableField::LIST_OF
                                     + ExportableField::ENTRY,
-            'listEntryObject' =>	ExportableField::LIST_OF
+            'listEntryObject' =>    ExportableField::LIST_OF
                                     + ExportableField::ENTRY
                                     + ExportableField::OBJECT,
-            'listEntryToValue' =>	ExportableField::LIST_OF
+            'listEntryToValue' =>   ExportableField::LIST_OF
                                     + ExportableField::ENTRY
                                     + ExportableField::VALUE,
-            'listValue' =>			ExportableField::LIST_OF
+            'listValue' =>          ExportableField::LIST_OF
                                     + ExportableField::VALUE
         );
     }
