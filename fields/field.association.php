@@ -564,8 +564,9 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
             $wrapper->appendChild(Widget::Error($label, $flagWithError));
         } else $wrapper->appendChild($label);
 
-        // Set entry limit
+        // Set field context data
         $wrapper->setAttribute('data-limit', $this->get('limit'));
+        $wrapper->setAttribute('data-type', 'numeric');
     }
 
     public function processRawFieldData($data, &$status, &$message=null, $simulate=false, $entry_id=null)
