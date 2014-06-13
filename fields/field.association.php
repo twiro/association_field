@@ -84,7 +84,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $this->_settings[$field] = $value;
     }
 
-    public function findOptions(array $existing_selection=NULL,$entry_id=NULL)
+    public function findOptions(array $selected_ids, $entry_id=NULL)
     {
         $values = array();
         $limit = $this->get('limit');
@@ -119,11 +119,8 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
                     }
                 }
 
-                // If a value is already selected, ensure it is added to the list (if it isn't in the available options)
-                if (!is_null($existing_selection) && !empty($existing_selection)) {
-                    $entries_for_field = $this->findEntriesForField($existing_selection, $_section['field_id']);
-                    $results = array_merge($results, $entries_for_field);
-                }
+                // If a value is already selected, exclude it from the list
+                $results = array_diff($results, $selected_ids);
 
                 if (is_array($results) && !empty($results)) {
                     $related_values = $this->findRelatedValues($results);
@@ -140,6 +137,28 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         }
 
         return $values;
+    }
+
+    public function findSelected(array $selected_ids) {
+        if(empty($selected_ids)) {
+            return array();
+        }
+
+        $group = array();      
+        $values = array();
+        $related_values = $this->findRelatedValues($selected_ids);
+
+        // Group values
+        foreach($related_values as $value) {
+            $values[$value['id']] = $value['value'];
+        }
+
+        // Build selection
+        foreach ($selected_ids as $id) {
+            $group[] = array($id, true, $values[$id]);
+        }
+
+        return $group;
     }
 
     public function getToggleStates()
@@ -182,7 +201,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
             $this->get('id'), $value
         ));
     }
-
+    
     public function fetchAssociatedEntrySearchValue($data, $field_id=NULL, $parent_entry_id=NULL)
     {
         // We dont care about $data, but instead $parent_entry_id
@@ -198,29 +217,6 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         ));
 
         return $searchvalue['entry_id'];
-    }
-
-    public function findEntriesForField(array $relation_id = array(), $field_id = null)
-    {
-        if(empty($relation_id) || !is_array($this->get('related_field_id'))) return array();
-
-        try {
-            // Figure out which `related_field_id` is from that section
-            $relations = Symphony::Database()->fetchCol('id', sprintf("
-                    SELECT e.id
-                    FROM `tbl_fields` AS `f`
-                    LEFT JOIN `tbl_sections` AS `s` ON (f.parent_section = s.id)
-                    LEFT JOIN `tbl_entries` AS `e` ON (e.section_id = s.id)
-                    WHERE f.id = %d
-                    AND e.id IN (%s)
-                ",
-                $field_id, implode(',',$relation_id), implode(',', $this->get('related_field_id'))
-            ));
-        } catch (Exception $e) {
-            return array();
-        }
-
-        return $relations;
     }
 
     protected function findRelatedValues(array $relation_id = array())
@@ -529,7 +525,9 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
             }
         }
 
-        $states = $this->findOptions($entry_ids,$entry_id);
+        $options = array_merge($options, $this->findSelected($entry_ids));
+        $states = $this->findOptions($entry_ids, $entry_id);
+
         if (!empty($states)) {
             foreach ($states as $s) {
                 $group = array('label' => $s['name'], 'options' => array());
