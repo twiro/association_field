@@ -611,8 +611,6 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
             $grouped_values[$value['id']] = $value;
         }
 
-        print_r($data);
-
         // Append items (keeping sort order)
         foreach ($data['relation_id'] as $id) {
             $relation = $grouped_values[$id];
