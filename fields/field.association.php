@@ -573,9 +573,13 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $result = array();
 
         if (!is_array($data)) {
-            $result['relation_id'] = ((int) $data === 0) ? null : (int) $data;
-        } else foreach ($data as $a => $value) {
-            $result['relation_id'][] = ((int) $data[$a] === 0) ? null : (int) $data[$a];
+            $data = array($data);
+        }
+
+        foreach ($data as $key => $relation) {
+            if (!empty($relation)) {
+                $result['relation_id'][] = $relation;
+            }
         }
 
         return $result;
@@ -606,6 +610,8 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         foreach ($related_values as $value) {
             $grouped_values[$value['id']] = $value;
         }
+
+        print_r($data);
 
         // Append items (keeping sort order)
         foreach ($data['relation_id'] as $id) {
