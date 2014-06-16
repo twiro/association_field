@@ -601,7 +601,15 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         }
         $related_values = $this->findRelatedValues($data['relation_id']);
 
-        foreach ($related_values as $relation) {
+        // Group values by id
+        $grouped_values = array();
+        foreach ($related_values as $value) {
+            $grouped_values[$value['id']] = $value;
+        }
+
+        // Append items (keeping sort order)
+        foreach ($data['relation_id'] as $id) {
+            $relation = $grouped_values[$id];
             $value = $relation['value'];
 
             $item = new XMLElement('item');
