@@ -84,7 +84,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $this->_settings[$field] = $value;
     }
 
-    public function findOptions(array $selected_ids, $entry_id=NULL)
+    public function findOptions(array $selected_ids=array(), $entry_id=NULL)
     {
         $values = array();
         $limit = $this->get('limit');
