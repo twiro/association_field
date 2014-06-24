@@ -429,9 +429,6 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $label->appendChild($input);
         $wrapper->appendChild($label);
 
-        // Association Interface
-        $this->appendAssociationInterfaceSelect($wrapper);
-
         // Options
         $div = new XMLElement('div', NULL, array('class' => 'two columns'));
         $wrapper->appendChild($div);
@@ -448,9 +445,6 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $label->setValue($input->generate() . ' ' . __('Allow selection of multiple options'));
         $div->appendChild($label);
 
-        // Show associations
-        $this->appendShowAssociationCheckbox($div);
-
         // Hide when prepopulated
         $label = Widget::Label();
         $label->setAttribute('class', 'column');
@@ -462,6 +456,12 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
         $label->setValue($input->generate() . ' ' . __('Hide when prepopulated'));
         $div->appendChild($label);
+
+        // Associations
+        $fieldset = new XMLElement('fieldset');
+        $this->appendAssociationInterfaceSelect($fieldset);
+        $this->appendShowAssociationCheckbox($fieldset);
+        $wrapper->appendChild($fieldset);
 
         // Requirements and table display
         $this->appendStatusFooter($wrapper);
