@@ -149,7 +149,12 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $related_values = $this->findRelatedValues($selected_ids);
 
         // Group values
+        $association_context = $this->getAssociationContext();
         foreach($related_values as $value) {
+            if (!empty($association_context['interface'])) {
+                $value['value'] = htmlspecialchars($value['value']);
+            }
+
             $values[$value['id']] = $value['value'];
         }
 

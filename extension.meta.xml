@@ -13,6 +13,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="0.5.3" date="2014-07-03" min="2.4">
+			- Fixed option encoding for field instances with interface
+		</release>
 		<release version="0.5.2" date="2014-06-24" min="2.4">
 			- Updated field settings layout
 		</release>
