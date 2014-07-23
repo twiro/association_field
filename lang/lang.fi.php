@@ -1,30 +1,35 @@
 <?php
 
-  $about = array(
-        'name' => 'Finnish',
-        'author' => array(
-            'name' => 'Leo Nikkilä',
-            'email' => 'leo.nikkila@gmail.com',
-            'website' => ''
-        ),
-        'release-date' => '2013-06-23'
-    );
+	$about = array(
+		'name' => 'Finnish',
+		'author' => array(
+			'name' => 'Leo Nikkilä',
+			'email' => 'leo.nikkila@gmail.com',
+			'website' => ''
+		),
+		'release-date' => '2014-07-23'
+	);
 
-    /**
-     * Select Box Link Field
-     */
-    $dictionary = array(
+	/**
+	 * Association Field
+	 */
+	$dictionary = array(
 
-        'Select Box Link' =>
-        'Valintalaatikkolinkki',
+		'Allow selection of multiple options' => 
+		'Salli useamman vaihtoehdon valitseminen',
 
-        'Values' =>
-        'Arvot',
+		'Values' => 
+		'Arvot',
 
-        'Limit to %s entries' =>
-        'Rajoita %s merkintään',
+		// Missing
 
-        'Allow selection of multiple options' =>
-        'Salli useamman vaihtoehdon valitseminen',
+		'Association' => 
+		false,
 
-    );
+		'Maximum entries' => 
+		false,
+
+		'Hide when prepopulated' => 
+		false,
+
+	);

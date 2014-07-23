@@ -1,33 +1,35 @@
 <?php
 
-    $about = array(
-        'name' => 'Deutsch',
-        'author' => array(
-            'name' => 'Nils Hörrmann',
-            'email' => 'post@nilshoerrmann.de',
-            'website' => 'http://www.nilshoerrmann.de'
-        ),
-        'release-date' => '2013-09-18'
-    );
+	$about = array(
+		'name' => 'Deutsch',
+		'author' => array(
+			'name' => 'Nils Hörrmann',
+			'email' => 'post@nilshoerrmann.de',
+			'website' => 'http://www.nilshoerrmann.de'
+		),
+		'release-date' => '2014-07-23'
+	);
 
-    /**
-     * Select Box Link Field
-     */
-    $dictionary = array(
+	/**
+	 * Association Field
+	 */
+	$dictionary = array(
 
-        'Allow selection of multiple options' =>
-        'Erlaube Mehrfachauswahl.',
+		'Allow selection of multiple options' => 
+		'Erlaube Mehrfachauswahl.',
 
-        'Select Box Link' =>
-        'Select Box Link',
+		'Hide when prepopulated' => 
+		'Vorausgefüllte Felder verstecken',
 
-        'Values' =>
-        'Werte',
+		'Values' => 
+		'Werte',
 
-        'Limit to %s entries' =>
-        'Auf %s Einträge beschränken',
+		// Missing
 
-        'Hide when prepopulated' =>
-        'Vorausgefüllte Felder verstecken',
+		'Association' => 
+		'Verknüpfungen',
 
-    );
+		'Maximum entries' => 
+		false,
+
+	);

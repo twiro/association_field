@@ -1,35 +1,35 @@
 <?php
 
-    $about = array(
-        'name' => 'Nederlands',
-        'author' => array(
-            'name' => 'Carsten de Vries',
-            'email' => 'carsten@vrieswerk.nl',
-            'website' => 'http://www.vrieswerk.nl'
-        ),
-        'release-date' => '2009-11-09'
-    );
+	$about = array(
+		'name' => 'Nederlands',
+		'author' => array(
+			'name' => 'Carsten de Vries',
+			'email' => 'carsten@vrieswerk.nl',
+			'website' => 'http://www.vrieswerk.nl'
+		),
+		'release-date' => '2014-07-23'
+	);
 
-    /*
-     * EXTENSION: Field: Select Box Link
-     * Localisation strings
-     */
+	/**
+	 * Association Field
+	 */
+	$dictionary = array(
 
-    $dictionary = array(
+		'Allow selection of multiple options' => 
+		'Sta selectie van meerdere opties toe',
 
-        'Select Box Link' =>
-        'Selectiebox-link',
+		// Missing
 
-        'None' =>
-        false,
+		'Association' => 
+		false,
 
-        'Options' =>
-        'Opties',
+		'Values' => 
+		false,
 
-        'Limit to the %s most recent entries' =>
-        'Limiteer tot de %s meest recente items',
+		'Maximum entries' => 
+		false,
 
-        'Allow selection of multiple options' =>
-        'Sta selectie van meerdere opties toe'
+		'Hide when prepopulated' => 
+		false,
 
-    );
+	);

@@ -1,32 +1,35 @@
 <?php
 
-    $about = array(
-        'name' => 'Polish',
-        'author' => array(
-            'name' => 'Idea07',
-            'email' => 'studio@idea07.pl',
-            'website' => ''
-        ),
-        'release-date' => '2013-06-17'
-    );
+	$about = array(
+		'name' => 'Polish',
+		'author' => array(
+			'name' => 'Idea07',
+			'email' => 'studio@idea07.pl',
+			'website' => ''
+		),
+		'release-date' => '2014-07-23'
+	);
 
-    /**
-     * Select Box Link Field
-     */
-    $dictionary = array(
+	/**
+	 * Association Field
+	 */
+	$dictionary = array(
 
-        // Missing
+		'Allow selection of multiple options' => 
+		'Pozwól na zaznaczanie wielu opcji',
 
-        'Select Box Link' =>
-        'Select Box Link',
+		'Values' => 
+		'Wartości',
 
-        'Values' =>
-        'Wartości',
+		// Missing
 
-        'Limit to %s entries' =>
-        'Ogranicz do %s wpisów',
+		'Association' => 
+		false,
 
-        'Allow selection of multiple options' =>
-        'Pozwól na zaznaczanie wielu opcji',
+		'Maximum entries' => 
+		false,
 
-    );
+		'Hide when prepopulated' => 
+		false,
+
+	);

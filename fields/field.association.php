@@ -1,6 +1,8 @@
 <?php
 
-if(!defined('__IN_SYMPHONY__')) die('<h2>Symphony Error</h2><p>You cannot directly access this file</p>');
+if (!defined('__IN_SYMPHONY__')) {
+    die('<h2>Symphony Error</h2><p>You cannot directly access this file</p>');
+}
 
 require_once FACE . '/interface.exportablefield.php';
 require_once FACE . '/interface.importablefield.php';
@@ -84,21 +86,23 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $this->_settings[$field] = $value;
     }
 
-    public function findOptions(array $selected_ids=array(), $entry_id=NULL)
+    public function findOptions(array $selected_ids = array(), $entry_id = null)
     {
         $values = array();
         $limit = $this->get('limit');
 
-        if(!is_array($this->get('related_field_id'))) return $values;
+        if (!is_array($this->get('related_field_id'))) {
+            return $values;
+        }
 
         // find the sections of the related fields
-        $sections = Symphony::Database()->fetch("
-            SELECT DISTINCT (s.id), f.id as `field_id`
-            FROM `tbl_sections` AS `s`
-            LEFT JOIN `tbl_fields` AS `f` ON `s`.id = `f`.parent_section
-            WHERE `f`.id IN ('" . implode("','", $this->get('related_field_id')) . "')
-            ORDER BY s.sortorder ASC
-        ");
+        $sections = Symphony::Database()->fetch(
+            "SELECT DISTINCT (s.id), f.id as `field_id`
+             FROM `tbl_sections` AS `s`
+             LEFT JOIN `tbl_fields` AS `f` ON `s`.id = `f`.parent_section
+             WHERE `f`.id IN ('" . implode("','", $this->get('related_field_id')) . "')
+             ORDER BY s.sortorder ASC"
+        );
 
         if (is_array($sections) && !empty($sections)) {
             foreach ($sections as $_section) {
@@ -113,7 +117,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
                 if ($limit > 0) {
                     EntryManager::setFetchSorting($section->getSortingField(), $section->getSortingOrder());
-                    $entries = EntryManager::fetch(NULL, $section->get('id'), $limit, 0, null, null, false, false);
+                    $entries = EntryManager::fetch(null, $section->get('id'), $limit, 0, null, null, false, false);
                     foreach ($entries as $entry) {
                         $results[] = (int) $entry['id'];
                     }
@@ -139,18 +143,19 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         return $values;
     }
 
-    public function findSelected(array $selected_ids) {
-        if(empty($selected_ids)) {
+    public function findSelected(array $selected_ids)
+    {
+        if (empty($selected_ids)) {
             return array();
         }
 
-        $group = array();      
+        $group = array();
         $values = array();
         $related_values = $this->findRelatedValues($selected_ids);
 
         // Group values
         $association_context = $this->getAssociationContext();
-        foreach($related_values as $value) {
+        foreach ($related_values as $value) {
             if (!empty($association_context['interface'])) {
                 $value['value'] = htmlspecialchars($value['value']);
             }
@@ -178,7 +183,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         return $output;
     }
 
-    public function toggleFieldData(array $data, $newState, $entry_id=null)
+    public function toggleFieldData(array $data, $newState, $entry_id = null)
     {
         $data['relation_id'] = $newState;
 
@@ -187,38 +192,42 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
     public function fetchAssociatedEntryCount($value)
     {
-        return Symphony::Database()->fetchVar('count', 0, sprintf("
-                SELECT COUNT(*) as `count`
-                FROM `tbl_entries_data_%d`
-                WHERE `relation_id` = %d
-            ",
-            $this->get('id'), $value
+        return Symphony::Database()->fetchVar('count', 0, sprintf(
+            "SELECT COUNT(*) as `count`
+             FROM `tbl_entries_data_%d`
+             WHERE `relation_id` = %d",
+            $this->get('id'),
+            $value
         ));
     }
 
     public function fetchAssociatedEntryIDs($value)
     {
-        return Symphony::Database()->fetchCol('entry_id', sprintf("
-                SELECT `entry_id`
-                FROM `tbl_entries_data_%d`
-                WHERE `relation_id` = %d
-            ",
-            $this->get('id'), $value
+        return Symphony::Database()->fetchCol('entry_id', sprintf(
+            "SELECT `entry_id`
+             FROM `tbl_entries_data_%d`
+             WHERE `relation_id` = %d",
+            $this->get('id'),
+            $value
         ));
     }
-    
-    public function fetchAssociatedEntrySearchValue($data, $field_id=NULL, $parent_entry_id=NULL)
+
+    public function fetchAssociatedEntrySearchValue($data, $field_id = null, $parent_entry_id = null)
     {
         // We dont care about $data, but instead $parent_entry_id
-        if(!is_null($parent_entry_id)) return $parent_entry_id;
+        if (!is_null($parent_entry_id)) {
+            return $parent_entry_id;
+        }
+        if (!is_array($data)) {
+            return $data;
+        }
 
-        if(!is_array($data)) return $data;
-
-        $searchvalue = Symphony::Database()->fetchRow(0, sprintf("
-            SELECT `entry_id` FROM `tbl_entries_data_%d`
-            WHERE `handle` = '%s'
-            LIMIT 1",
-            $field_id, addslashes($data['handle'])
+        $searchvalue = Symphony::Database()->fetchRow(0, sprintf(
+            "SELECT `entry_id` FROM `tbl_entries_data_%d`
+             WHERE `handle` = '%s'
+             LIMIT 1",
+            $field_id,
+            addslashes($data['handle'])
         ));
 
         return $searchvalue['entry_id'];
@@ -244,23 +253,26 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
             $fields = self::$cache[$hash]['fields'];
         }
 
-        if(empty($fields)) return array();
+        if (empty($fields)) {
+            return array();
+        }
 
         // 2. Find all the provided `relation_id`'s related section
         // We also cache the result using the `relation_id` as identifier
         // to prevent unnecessary queries
         $relation_id = array_filter($relation_id);
-        if(empty($relation_id)) return array();
+        if (empty($relation_id)) {
+            return array();
+        }
 
         $hash = md5(serialize($relation_id).$this->get('element_name'));
 
         if (!isset(self::$cache[$hash]['relation_data'])) {
-            $relation_ids = Symphony::Database()->fetch(sprintf("
-                SELECT e.id, e.section_id, s.name, s.handle
-                FROM `tbl_entries` AS `e`
-                LEFT JOIN `tbl_sections` AS `s` ON (s.id = e.section_id)
-                WHERE e.id IN (%s)
-                ",
+            $relation_ids = Symphony::Database()->fetch(sprintf(
+                "SELECT e.id, e.section_id, s.name, s.handle
+                 FROM `tbl_entries` AS `e`
+                 LEFT JOIN `tbl_sections` AS `s` ON (s.id = e.section_id)
+                 WHERE e.id IN (%s)",
                 implode(',', $relation_id)
             ));
 
@@ -292,7 +304,9 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
                 }
 
                 $section = SectionManager::fetch($section_id);
-                if(($section instanceof Section) === false) continue;
+                if (($section instanceof Section) === false) {
+                    continue;
+                }
 
                 EntryManager::setFetchSorting($section->getSortingField(), $section->getSortingOrder());
                 $entries = EntryManager::fetch(array_values($entry_data), $section_id, null, null, null, null, false, true, $schema);
@@ -300,32 +314,31 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
                 foreach ($entries as $entry) {
                     $field_data = $entry->getData($field->get('id'));
 
-                    if (is_array($field_data) === false || empty($field_data)) continue;
+                    if (is_array($field_data) === false || empty($field_data)) {
+                        continue;
+                    }
 
                     // Get unformatted content:
-                    if (
-                        $field instanceof ExportableField
-                        && in_array(ExportableField::UNFORMATTED, $field->getExportModes())
-                    ) {
+                    if ($field instanceof ExportableField && in_array(ExportableField::UNFORMATTED, $field->getExportModes())) {
                         $value = $field->prepareExportValue(
-                            $field_data, ExportableField::UNFORMATTED, $entry->get('id')
+                            $field_data,
+                            ExportableField::UNFORMATTED,
+                            $entry->get('id')
                         );
-                    }
+                    } else if ($field instanceof ExportableField && in_array(ExportableField::VALUE, $field->getExportModes())) {
 
-                    // Get values:
-                    else if (
-                        $field instanceof ExportableField
-                        && in_array(ExportableField::VALUE, $field->getExportModes())
-                    ) {
+                        // Get values:
                         $value = $field->prepareExportValue(
-                            $field_data, ExportableField::VALUE, $entry->get('id')
+                            $field_data,
+                            ExportableField::VALUE,
+                            $entry->get('id')
                         );
-                    }
+                    } else {
 
-                    // Handle fields that are not exportable:
-                    else {
+                        // Handle fields that are not exportable:
                         $value = $field->getParameterPoolValue(
-                            $field_data, $entry->get('id')
+                            $field_data,
+                            $entry->get('id')
                         );
                     }
 
@@ -363,14 +376,13 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
         foreach ($related_field_ids as $related_field_id) {
             try {
-                $return = Symphony::Database()->fetchCol("id", sprintf("
-                    SELECT
-                        `entry_id` as `id`
-                    FROM
-                        `tbl_entries_data_%d`
-                    WHERE
-                        `handle` = '%s'
-                    LIMIT 1", $related_field_id, Lang::createHandle($value)
+                $return = Symphony::Database()->fetchCol("id", sprintf(
+                    "SELECT `entry_id` as `id`
+                     FROM `tbl_entries_data_%d`
+                     WHERE `handle` = '%s'
+                     LIMIT 1",
+                    $related_field_id,
+                    Lang::createHandle($value)
                 ));
 
                 // Skipping returns wrong results when doing an
@@ -396,8 +408,12 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
     public function findDefaults(array &$settings)
     {
-        if(!isset($settings['allow_multiple_selection'])) $settings['allow_multiple_selection'] = 'no';
-        if(!isset($settings['show_association'])) $settings['show_association'] = 'yes';
+        if (!isset($settings['allow_multiple_selection'])) {
+            $settings['allow_multiple_selection'] = 'no';
+        }
+        if (!isset($settings['show_association'])) {
+            $settings['show_association'] = 'yes';
+        }
     }
 
     public function displaySettingsPanel(XMLElement &$wrapper, $errors = null)
@@ -417,7 +433,8 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $label->appendChild(
             Widget::Select('fields['.$this->get('sortorder').'][related_field_id][]', $options, array(
                 'multiple' => 'multiple',
-                'class' => 'js-fetch-sections'
+                'class' => 'js-fetch-sections',
+                'data-required' => 'true'
             ))
         );
 
@@ -435,7 +452,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $wrapper->appendChild($label);
 
         // Options
-        $div = new XMLElement('div', NULL, array('class' => 'two columns'));
+        $div = new XMLElement('div', null, array('class' => 'two columns'));
         $wrapper->appendChild($div);
 
         // Allow selection of multiple items
@@ -472,6 +489,23 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $this->appendStatusFooter($wrapper);
     }
 
+    public function checkPostFieldData($data, &$message, $entry_id = null)
+    {
+        $message = null;
+
+        $data = is_array($data) && isset($data['relation_id'])
+                ? array_filter($data['relation_id'])
+                : $data;
+
+        if ($this->get('required') == 'yes' && (empty($data))) {
+            $message = __('‘%s’ is a required field.', array($this->get('label')));
+
+            return self::__MISSING_FIELDS__;
+        }
+
+        return self::__OK__;
+    }
+
     public function checkFields(array &$errors, $checkForDuplicates = true)
     {
         parent::checkFields($errors, $checkForDuplicates);
@@ -486,22 +520,29 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
     public function commit()
     {
-        if(!parent::commit()) return false;
+        if (!parent::commit()) {
+            return false;
+        }
 
         $id = $this->get('id');
 
-        if($id === false) return false;
+        if ($id === false) {
+            return false;
+        }
 
         $fields = array();
         $fields['field_id'] = $id;
-        if($this->get('related_field_id') != '') $fields['related_field_id'] = $this->get('related_field_id');
+        if ($this->get('related_field_id') != '') {
+            $fields['related_field_id'] = $this->get('related_field_id');
+        }
+        $fields['related_field_id'] = implode(',', $this->get('related_field_id'));
         $fields['allow_multiple_selection'] = $this->get('allow_multiple_selection') ? $this->get('allow_multiple_selection') : 'no';
-        $fields['show_association'] = $this->get('show_association') == 'yes' ? 'yes' : 'no';
         $fields['hide_when_prepopulated'] = $this->get('hide_when_prepopulated') == 'yes' ? 'yes' : 'no';
         $fields['limit'] = max(0, (int) $this->get('limit'));
-        $fields['related_field_id'] = implode(',', $this->get('related_field_id'));
 
-        if(!FieldManager::saveSettings($id, $fields)) return false;
+        if (!FieldManager::saveSettings($id, $fields)) {
+            return false;
+        }
 
         SectionManager::removeSectionAssociation($id);
         foreach ($this->get('related_field_id') as $field_id) {
@@ -519,7 +560,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
     {
         $entry_ids = array();
         $options = array(
-            array(NULL, false, NULL)
+            array(null, false, null)
         );
 
         if (!is_null($data['relation_id'])) {
@@ -553,26 +594,32 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         }
 
         $fieldname = 'fields'.$fieldnamePrefix.'['.$this->get('element_name').']'.$fieldnamePostfix;
-        if($this->get('allow_multiple_selection') == 'yes') $fieldname .= '[]';
+        if ($this->get('allow_multiple_selection') == 'yes') {
+            $fieldname .= '[]';
+        }
 
         $label = Widget::Label($this->get('label'));
-        if($this->get('required') != 'yes') $label->appendChild(new XMLElement('i', __('Optional')));
+        if ($this->get('required') != 'yes') {
+            $label->appendChild(new XMLElement('i', __('Optional')));
+        }
         $label->appendChild(
             Widget::Select($fieldname, $options, ($this->get('allow_multiple_selection') == 'yes' ? array(
-                'multiple' => 'multiple') : NULL
+                'multiple' => 'multiple') : null
             ))
         );
 
         if (!is_null($flagWithError)) {
             $wrapper->appendChild(Widget::Error($label, $flagWithError));
-        } else $wrapper->appendChild($label);
+        } else {
+            $wrapper->appendChild($label);
+        }
 
         // Set field context data
         $wrapper->setAttribute('data-limit', $this->get('limit'));
         $wrapper->setAttribute('data-type', 'numeric');
     }
 
-    public function processRawFieldData($data, &$status, &$message=null, $simulate=false, $entry_id=null)
+    public function processRawFieldData($data, &$status, &$message = null, $simulate = false, $entry_id = null)
     {
         $status = self::__OK__;
         $result = array();
@@ -592,7 +639,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
     public function getExampleFormMarkup()
     {
-        return Widget::Input('fields['.$this->get('element_name').']', '...', 'hidden');
+        return Widget::Input('fields['.$this->get('element_name').']', '…', 'hidden');
     }
 
 /*-------------------------------------------------------------------------
@@ -601,7 +648,9 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
     public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $mode = null, $entry_id = null)
     {
-        if(!is_array($data) || empty($data) || is_null($data['relation_id'])) return;
+        if (!is_array($data) || empty($data) || is_null($data['relation_id'])) {
+            return;
+        }
 
         $list = new XMLElement($this->get('element_name'));
 
@@ -634,7 +683,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         $wrapper->appendChild($list);
     }
 
-    public function getParameterPoolValue(array $data, $entry_id=NULL)
+    public function getParameterPoolValue(array $data, $entry_id = null)
     {
         return $this->prepareExportValue($data, ExportableField::LIST_OF + ExportableField::ENTRY, $entry_id);
     }
@@ -651,18 +700,12 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
             $data['relation_id'] = array($data['relation_id']);
         }
 
-        $result = $this->findRelatedValues($data['relation_id']);
-
         if (!is_null($link)) {
-            $label = '';
-            foreach ($result as $item) {
-                $label .= $item['value'] . ', ';
-            }
-            $link->setValue(General::sanitize(trim($label, ', ')));
-
+            $link->setValue($this->preparePlainTextValue($data, $entry_id));
             return $link->generate();
         }
 
+        $result = $this->findRelatedValues($data['relation_id']);
         $output = '';
 
         foreach ($result as $item) {
@@ -671,6 +714,26 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         }
 
         return trim($output, ', ');
+    }
+
+    public function preparePlainTextValue($data, $entry_id = null, $truncate = false, $defaultValue = null)
+    {
+        if (!is_array($data) || (is_array($data) && !isset($data['relation_id']))) {
+            return parent::preparePlainTextValue($data, $entry_id, $truncate, $defaultValue);
+        }
+
+        if (!is_array($data['relation_id'])) {
+            $data['relation_id'] = array($data['relation_id']);
+        }
+
+        $result = $this->findRelatedValues($data['relation_id']);
+
+        $label = '';
+        foreach ($result as $item) {
+            $label .= $item['value'] . ', ';
+        }
+
+        return trim($label, ', ');
     }
 
 /*-------------------------------------------------------------------------
@@ -754,7 +817,9 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
     {
         $modes = (object) $this->getExportModes();
 
-        if (isset($data['relation_id']) === false) return null;
+        if (isset($data['relation_id']) === false) {
+            return null;
+        }
 
         if (is_array($data['relation_id']) === false) {
             $data['relation_id'] = array(
@@ -762,23 +827,24 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
             );
         }
 
-        // Return postdata:
         if ($mode === $modes->getPostdata) {
+
+            // Return postdata:
             return $data;
-        }
+        } else if ($mode === $modes->listEntry) {
 
-        // Return the entry IDs:
-        else if ($mode === $modes->listEntry) {
+            // Return the entry IDs:
             return $data['relation_id'];
-        }
+        } else if ($mode === $modes->listEntryObject) {
 
-        // Return entry objects:
-        else if ($mode === $modes->listEntryObject) {
+            // Return entry objects:
             $items = array();
 
             $entries = EntryManager::fetch($data['relation_id']);
             foreach ($entries as $entry) {
-                if (is_array($entry) === false || empty($entry)) continue;
+                if (is_array($entry) === false || empty($entry)) {
+                    continue;
+                }
 
                 $items[] = current($entry);
             }
@@ -807,23 +873,24 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
     Filtering:
 -------------------------------------------------------------------------*/
 
-    public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation=false)
+    public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation = false)
     {
         $field_id = $this->get('id');
 
         if (preg_match('/^sql:\s*/', $data[0], $matches)) {
             $data = trim(array_pop(explode(':', $data[0], 2)));
 
-            // Check for NOT NULL (ie. Entries that have any value)
             if (strpos($data, "NOT NULL") !== false) {
+
+                // Check for NOT NULL (ie. Entries that have any value)
                 $joins .= " LEFT JOIN
                                 `tbl_entries_data_{$field_id}` AS `t{$field_id}`
                             ON (`e`.`id` = `t{$field_id}`.entry_id)";
                 $where .= " AND `t{$field_id}`.relation_id IS NOT NULL ";
 
-            }
-            // Check for NULL (ie. Entries that have no value)
-            else if (strpos($data, "NULL") !== false) {
+            } else if (strpos($data, "NULL") !== false) {
+
+                // Check for NULL (ie. Entries that have no value)
                 $joins .= " LEFT JOIN
                                 `tbl_entries_data_{$field_id}` AS `t{$field_id}`
                             ON (`e`.`id` = `t{$field_id}`.entry_id)";
@@ -873,9 +940,9 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
                         FROM `tbl_entries_data_$field_id` AS `t$field_id`
                         WHERE `t$field_id`.entry_id = `e`.id AND `t$field_id`.relation_id IN (".implode(", ", $data).")
                     )";
-                }
-                // Normal filtering
-                else {
+                } else {
+
+                    // Normal filtering
                     $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id` ON (`e`.`id` = `t$field_id`.entry_id) ";
                     $where .= " AND (`t$field_id`.relation_id $condition ('".implode("', '", $data)."') ";
 
@@ -894,14 +961,18 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
     public function groupRecords($records)
     {
-        if(!is_array($records) || empty($records)) return;
+        if (!is_array($records) || empty($records)) {
+            return;
+        }
 
         $groups = array($this->get('element_name') => array());
 
         $related_field_id = current($this->get('related_field_id'));
         $field = FieldManager::fetch($related_field_id);
 
-        if(!$field instanceof Field) return;
+        if (!$field instanceof Field) {
+            return;
+        }
 
         foreach ($records as $r) {
             $data = $r->getData($this->get('id'));
@@ -922,7 +993,9 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
                 $related_data = EntryManager::fetch($value, $field->get('parent_section'), 1, null, null, null, false, true, array($field->get('element_name')));
                 $related_data = current($related_data);
 
-                if(!$related_data instanceof Entry) continue;
+                if (!$related_data instanceof Entry) {
+                    continue;
+                }
 
                 $primary_field = $field->prepareTableValue($related_data->getData($related_field_id));
 
@@ -943,5 +1016,4 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 
         return $groups;
     }
-
 }

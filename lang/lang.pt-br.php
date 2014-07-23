@@ -1,35 +1,35 @@
 <?php
 
-    $about = array(
-        'name' => 'Portuguese (Brazil)',
-        'author' => array(
-            'name' => 'Rainer Borene',
-            'email' => 'eu@rainerborene.com',
-            'website' => false
-        ),
-        'release-date' => '2010-02-01'
-    );
+	$about = array(
+		'name' => 'Portuguese (Brazil)',
+		'author' => array(
+			'name' => 'Rainer Borene',
+			'email' => 'eu@rainerborene.com',
+			'website' => ''
+		),
+		'release-date' => '2014-07-23'
+	);
 
-    /*
-     * EXTENSION: Field: Select Box Link
-     * Localisation strings
-     */
+	/**
+	 * Association Field
+	 */
+	$dictionary = array(
 
-    $dictionary = array(
+		'Allow selection of multiple options' => 
+		'Permitir seleção de múltiplas opções',
 
-        'Select Box Link' =>
-        'Select Box Link',
+		// Missing
 
-        'None' =>
-        'Nenhum',
+		'Association' => 
+		false,
 
-        'Options' =>
-        'Opções',
+		'Values' => 
+		false,
 
-        'Limit to the %s most recent entries' =>
-        'Limitar para as %s recentes entradas',
+		'Maximum entries' => 
+		false,
 
-        'Allow selection of multiple options' =>
-        'Permitir seleção de múltiplas opções'
+		'Hide when prepopulated' => 
+		false,
 
-    );
+	);

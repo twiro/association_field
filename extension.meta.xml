@@ -13,6 +13,10 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="0.5.4" date="2014-07-24" min="2.4">
+			- Merged in changes from Select Box Link
+			- Code clean-up
+		</release>
 		<release version="0.5.3" date="2014-07-03" min="2.4">
 			- Fixed option encoding for field instances with interface
 		</release>

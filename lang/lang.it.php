@@ -1,33 +1,35 @@
 <?php
 
-    $about = array(
-        'name' => 'Italiano',
-        'author' => array(
-            'name' => 'Simone Economo',
-            'email' => 'my.ekoes@gmail.com',
-            'website' => 'http://lineheight.net',
-        ),
-        'release-date' => '2010-02-25',
-    );
+	$about = array(
+		'name' => 'Italiano',
+		'author' => array(
+			'name' => 'Simone Economo',
+			'email' => 'my.ekoes@gmail.com',
+			'website' => 'http://lineheight.net'
+		),
+		'release-date' => '2014-07-23'
+	);
 
-    /**
-     * Field: Select Box Link
-     */
-    $dictionary = array(
+	/**
+	 * Association Field
+	 */
+	$dictionary = array(
 
-        'Select Box Link' =>
-        'Giunzione fra sezioni',
+		'Allow selection of multiple options' => 
+		'Consenti la selezione di pi&ugrave; elementi',
 
-        'None' =>
-        'Nessuno',
+		// Missing
 
-        'Options' =>
-        'Fonti',
+		'Association' => 
+		false,
 
-        'Limit to the %s most recent entries' =>
-        'Limita alle %s voci più recenti',
+		'Values' => 
+		false,
 
-        'Allow selection of multiple options' =>
-        'Consenti la selezione di pi&ugrave; elementi',
+		'Maximum entries' => 
+		false,
 
-    );
+		'Hide when prepopulated' => 
+		false,
+
+	);

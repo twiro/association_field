@@ -1,35 +1,35 @@
 <?php
 
-    $about = array(
-        'name' => 'Français',
-        'author' => array(
-            'name' => 'Deux Huit Huit',
-            'email' => 'open-source (at) deuxhuithuit.com',
-            'website' => 'http://deuxhuithuit.com/'
-        ),
-        'release-date' => '2014-01-27',
-    );
+	$about = array(
+		'name' => 'Français',
+		'author' => array(
+			'name' => 'Deux Huit Huit',
+			'email' => 'open-source (at) deuxhuithuit.com',
+			'website' => 'http://deuxhuithuit.com/'
+		),
+		'release-date' => '2014-07-23'
+	);
 
-    /*
-     * EXTENSION: Field: Select Box Link
-     * Localisation strings
-     */
+	/**
+	 * Association Field
+	 */
+	$dictionary = array(
 
-    $dictionary = array(
+		'Allow selection of multiple options' => 
+		'Permettre la section de multiple options',
 
-        'Select Box Link' =>
-        'Menu de sélection lié',
+		// Missing
 
-        'None' =>
-        'Aucun',
+		'Association' => 
+		false,
 
-        'Options' =>
-        'Options',
+		'Values' => 
+		false,
 
-        'Limit to the %s most recent entries' =>
-        'Limiter aux %s entrées les plus récentes',
+		'Maximum entries' => 
+		false,
 
-        'Allow selection of multiple options' =>
-        'Permettre la section de multiple options'
+		'Hide when prepopulated' => 
+		false,
 
-    );
+	);

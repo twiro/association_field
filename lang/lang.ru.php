@@ -1,33 +1,35 @@
 <?php
 
-    $about = array(
-        'name' => 'Русский',
-        'author' => array(
-            'name' => 'Александр Бирюков',
-            'email' => 'info@alexbirukov.ru',
-            'website' => 'http://alexbirukov.ru'
-        ),
-        'release-date' => '2013-10-04'
-    );
+	$about = array(
+		'name' => 'Русский',
+		'author' => array(
+			'name' => 'Александр Бирюков',
+			'email' => 'info@alexbirukov.ru',
+			'website' => 'http://alexbirukov.ru'
+		),
+		'release-date' => '2014-07-23'
+	);
 
-    /**
-     * Select Box Link Field
-     */
-    $dictionary = array(
+	/**
+	 * Association Field
+	 */
+	$dictionary = array(
 
-        'Allow selection of multiple options' =>
-        'Разрешить выбор нескольких опций.',
+		'Allow selection of multiple options' => 
+		'Разрешить выбор нескольких опций.',
 
-        'Limit to %s entries' =>
-        'Лимит записей %s',
+		'Hide when prepopulated' => 
+		'Скрывать при предварительном формировании',
 
-        'Select Box Link' =>
-        'Ссылка на запись',
+		'Values' => 
+		'Значения',
 
-        'Values' =>
-        'Значения',
+		// Missing
 
-        'Hide when prepopulated' =>
-        'Скрывать при предварительном формировании',
+		'Association' => 
+		false,
 
-    );
+		'Maximum entries' => 
+		false,
+
+	);
