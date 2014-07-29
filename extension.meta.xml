@@ -13,6 +13,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="1.0.0beta" date="2014-07-29" min="2.5">
+			- Prepare release
+		</release>
 		<release version="0.5.4" date="2014-07-24" min="2.4">
 			- Merged in changes from Select Box Link
 			- Code clean-up
