@@ -748,8 +748,8 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
     public function getImportModes()
     {
         return array(
-            'getValue' =>       ImportableField::STRING_VALUE,
-            'getPostdata' =>    ImportableField::ARRAY_VALUE
+            'getPostdata' =>    ImportableField::ARRAY_VALUE,
+            'getValue' =>       ImportableField::STRING_VALUE
         );
     }
 
@@ -777,7 +777,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
                 }
             }
 
-            return $this->processRawFieldData($data, $status, $message, true, $entry_id);
+            return $data;
         }
 
         return null;
