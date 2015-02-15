@@ -56,6 +56,11 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         return ($this->get('allow_multiple_selection') == 'yes' ? true : false);
     }
 
+    public function fetchSuggestionTypes()
+    {
+        return array('association');
+    }
+
 /*-------------------------------------------------------------------------
     Setup:
 -------------------------------------------------------------------------*/
@@ -872,6 +877,37 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
 /*-------------------------------------------------------------------------
     Filtering:
 -------------------------------------------------------------------------*/
+
+    public function fetchFilterableOperators()
+    {
+        return array(
+            array(
+                'title' => 'is',
+                'filter' => ' ',
+                'help' => __('Find values that are an exact match for the given string.')
+            ),
+            array(
+                'filter' => 'sql: NOT NULL',
+                'title' => 'is not empty',
+                'help' => __('Find entries where any value is selected.')
+            ),
+            array(
+                'filter' => 'sql: NULL',
+                'title' => 'is empty',
+                'help' => __('Find entries where no value is selected.')
+            ),
+            array(
+                'filter' => 'sql-null-or-not: ',
+                'title' => 'is empty or not',
+                'help' => __('Find entries where no value is selected or it is not equal to this value.')
+            ),
+            array(
+                'filter' => 'not: ',
+                'title' => 'is not',
+                'help' => __('Find entries where the value is not equal to this value.')
+            )
+        );
+    }
 
     public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation = false)
     {
