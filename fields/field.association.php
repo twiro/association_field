@@ -345,7 +345,21 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
                             $field_data,
                             $entry->get('id')
                         );
+
+                        if(is_array($value) && count($value) === 1) {
+                            $value = implode($value);
+                        }
                     }
+
+                    /**
+                     * To ensure that the output is 'safe' for whoever consumes this function,
+                     * we will sanitize the value. Before sanitizing, we will reverse sanitise
+                     * the value to handle the scenario where the Field has been good and
+                     * has already sanitized the value.
+                     *
+                     * @see https://github.com/symphonycms/symphony-2/issues/2318
+                     */
+                    $value = General::sanitize(General::reverse_sanitize($value));
 
                     $relation_data[] = array(
                         'id' =>             $entry->get('id'),
@@ -680,7 +694,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
             $item->setAttribute('handle', Lang::createHandle($relation['value']));
             $item->setAttribute('section-handle', $relation['section_handle']);
             $item->setAttribute('section-name', General::sanitize($relation['section_name']));
-            $item->setValue(General::sanitize($relation['value']));
+            $item->setValue($relation['value']);
 
             $list->appendChild($item);
         }
@@ -865,9 +879,9 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
             $item = (object) $item;
 
             if ($mode === $modes->listValue) {
-                $items[] = $item->value;
+                $items[] = General::reverse_sanitize($item->value);
             } elseif ($mode === $modes->listEntryToValue) {
-                $items[$item->id] = $item->value;
+                $items[$item->id] = General::reverse_sanitize($item->value);
             }
         }
 
