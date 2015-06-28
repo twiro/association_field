@@ -512,9 +512,11 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
     {
         $message = null;
 
-        $data = is_array($data) && isset($data['relation_id'])
-                ? array_filter($data['relation_id'])
-                : $data;
+			if (is_array($data)) {
+				$data = isset($data['relation_id'])
+					? array_filter($data['relation_id'])
+					: array_filter($data);
+			}
 
         if ($this->get('required') == 'yes' && (empty($data))) {
             $message = __('‘%s’ is a required field.', array($this->get('label')));
