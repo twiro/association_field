@@ -720,7 +720,7 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         }
 
         if (!is_null($link)) {
-            $link->setValue($this->preparePlainTextValue($data, $entry_id));
+            $link->setValue($this->prepareReadableValue($data, $entry_id, true, __('None')));
             return $link->generate();
         }
 
@@ -735,10 +735,10 @@ class FieldAssociation extends Field implements ExportableField, ImportableField
         return trim($output, ', ');
     }
 
-    public function preparePlainTextValue($data, $entry_id = null, $truncate = false, $defaultValue = null)
+    public function prepareTextValue($data, $entry_id = null)
     {
         if (!is_array($data) || (is_array($data) && !isset($data['relation_id']))) {
-            return parent::preparePlainTextValue($data, $entry_id, $truncate, $defaultValue);
+            return parent::prepareTextValue($data, $entry_id);
         }
 
         if (!is_array($data['relation_id'])) {
